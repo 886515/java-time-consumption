@@ -1,6 +1,6 @@
 # java-time-consumption
 
-> :hourglass: A Java class used to generate a log file with information on the runtime of blocks of code.
+> A Java class used to generate a log file with information on the runtime of blocks of code.
 
 ## What it is
 
@@ -8,7 +8,7 @@ The `Timer` class is used to monitor the time that it takes for methods and bloc
 
 ### Instrumentation
 
-Computer software instrumentation is used to help analyze performance, diagnose errors, and log information about software. Instrumentation is used to monitor specific components of code, which, in our case, is methods and blocks of code. Instrumentation is usually managed by an overarching tool. The `Timer` class has been created using the [singleton design principle](https://www.tutorialspoint.com/design_pattern/singleton_pattern.htm), meaning that there can only ever be one instance of the class. This makes sure that the class behaves as expected and will not need to be re-instantiated. 
+Computer software instrumentation is used to help analyze performance, diagnose errors, and log information about software. Instrumentation is used to monitor specific components of code, which, in our case, is methods and blocks of code. Instrumentation is usually managed by an overarching tool. The `Timer` class has been created using the [singleton design principle](https://www.tutorialspoint.com/design_pattern/singleton_pattern.htm), meaning that there can only ever be one instance of the class. This makes sure that the class behaves as expected and will not need to be re-instantiated.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ The purpose of this class is to help determine which components of a software sy
 
 ## How it works
 
-To be able to run multiple timers at once, I had to come up with a way of keeping track of the start and end points of different blocks of code. This ended up being a relatively simple solution, which involved the use of two `Stack` objects. These `Stack`s follow the last-in-first-out (LIFO) principle charcteristic of a `Stack`. The reason for using `Stack`s is so that we can have the first timer started, be the last timer we end, just as it will be in code execution.
+To be able to run multiple timers at once, I had to come up with a way of keeping track of the start and end points of different blocks of code. This ended up being a relatively simple solution, which involved the use of two `Stack` objects. These `Stack`s follow the last-in-first-out \(LIFO\) principle charcteristic of a `Stack`. The reason for using `Stack`s is so that we can have the first timer started, be the last timer we end, just as it will be in code execution.
 
 ### Variables
 
@@ -35,19 +35,23 @@ This variable holds the various start times associated with the timers in `runni
 ### API
 
 #### `void startTiming(String comment)`
+
 Start timing a method, or block of code
 
 #### `void stopTiming(String comment)`
+
 Stop timing a method, or block of code
 
 #### `void comment(String comment)`
+
 Place an additional comment in the output of the instrumentation log file
 
-
 #### `void dump(String filename)`
+
 Writes formatted/indented pairs of startTiming/stopTiming statements to a human readable log file. If you provide `null` as filename then a logfile will be created with the timestamp `instrumentationddyyMMhhmmss.log`. You should call this method ONCE at the end of a program that uses the instrumentation class.
 
 #### `void activate(Boolean onOff)`
+
 Activates/deactivates instrumentation. You should call this ONCE at the beginning of any program that uses the instrumentation class. Pass in false and the calls to all instrumentation methods will return immediately with no effect. The class behaves as if `activate(false)` was called by default.
 
 ## Test Case
@@ -58,37 +62,37 @@ The results of this test are reproducibel. The `populateArray` always creates an
 
 ```java
 public class Test {
-	
-	public static void main(String[] args) {
-		Timer ins = Timer.getInstance();
-		ins.activate(true);
-		
-		ins.startTiming("main");
-		
-		ins.comment("I like to comment in my logs");
-		
-		ins.startTiming("populateArray()");
-		int[] array = populateArray();
-		ins.stopTiming("populateArray()");
-		
-		BubbleSort.sort(array);
-		
-		QuickSort.sort(array, 0, array.length - 1);
-		
-		ins.stopTiming("main");
-		ins.comment("One last comment before the dump!");
-		ins.dump("my.log");
-	}
+
+    public static void main(String[] args) {
+        Timer ins = Timer.getInstance();
+        ins.activate(true);
+
+        ins.startTiming("main");
+
+        ins.comment("I like to comment in my logs");
+
+        ins.startTiming("populateArray()");
+        int[] array = populateArray();
+        ins.stopTiming("populateArray()");
+
+        BubbleSort.sort(array);
+
+        QuickSort.sort(array, 0, array.length - 1);
+
+        ins.stopTiming("main");
+        ins.comment("One last comment before the dump!");
+        ins.dump("my.log");
+    }
 }
 ```
 
-### Analysis of Test Case log 
+### Analysis of Test Case log
 
-Whean creating a log for our test case there is some overhead. There is the space needed to store the buffer that will eventually be written to the log file, the space for the `runningTimers` and `startTimes` variables, and the time needed to access those variables, as well as write `buffer` to file. 
+Whean creating a log for our test case there is some overhead. There is the space needed to store the buffer that will eventually be written to the log file, the space for the `runningTimers` and `startTimes` variables, and the time needed to access those variables, as well as write `buffer` to file.
 
-When examining the performance of the sorting algorithms we can make predictions based off of their documented time complecity. Bubble sort has O(n^2), while quicksort has O(n\*log(n)). we can assume quicksort will take less time to execute.
+When examining the performance of the sorting algorithms we can make predictions based off of their documented time complecity. Bubble sort has O\(n^2\), while quicksort has O\(n\*log\(n\)\). we can assume quicksort will take less time to execute.
 
-The log for our test case shows that the class works as expected. Starting from the top, we have the start of the main timer for the `Test` class. There is then a comment. As expected, the comment is indented once as there is one timer running. Both the `populateArray` and `BubbleSort.sort` methods are started and stopped, while the `QuickSort.sort` method is started once for the initial call, then is started many times, recursively (this is what the `...` is meant to indicate). As the timing is built into the sorting methods, and `QuickSort.sort` is recursive, we see a very large time for its execution, when in reality, `BubbleSort.sort` is the more time consuming of the two algorithms. This is due to the repeated calls to start and stop timers for the `QuickSort.sort` algorithm. The log file finishes by stopping the main timer, then executing then printing the total time it took to run all of the timers (i.e. the time it toook to run `main`), finally followed by the final comment.
+The log for our test case shows that the class works as expected. Starting from the top, we have the start of the main timer for the `Test` class. There is then a comment. As expected, the comment is indented once as there is one timer running. Both the `populateArray` and `BubbleSort.sort` methods are started and stopped, while the `QuickSort.sort` method is started once for the initial call, then is started many times, recursively \(this is what the `...` is meant to indicate\). As the timing is built into the sorting methods, and `QuickSort.sort` is recursive, we see a very large time for its execution, when in reality, `BubbleSort.sort` is the more time consuming of the two algorithms. This is due to the repeated calls to start and stop timers for the `QuickSort.sort` algorithm. The log file finishes by stopping the main timer, then executing then printing the total time it took to run all of the timers \(i.e. the time it toook to run `main`\), finally followed by the final comment.
 
 ```
 STARTTIMING: main
@@ -104,3 +108,6 @@ STOPTIMING: main 5683ms
 TOTAL TIME: 5683ms
 COMMENT: One last comment before the dump!
 ```
+
+
+
