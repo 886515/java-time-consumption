@@ -68,7 +68,7 @@ public class Timer {
 			return;
 		}
 		
-		String indent = getIndent(-1);
+		String indent = getIndent();
 		
 		buffer += indent + "COMMENT: " + comment + "\n";
 	}
@@ -82,16 +82,6 @@ public class Timer {
 		
 		return indent;
 		
-	}
-	
-	private String getIndent(int offset) {
-		String indent = "";
-		
-		for(int i = 0; i < runningTimers.size() + offset; i ++) {
-			indent += "| ";
-		}
-		
-		return indent;
 	}
 	
 	public void dump(String filename) {

@@ -1,6 +1,9 @@
 class BubbleSort {
     
 	static void sort(int[] array) {
+		Timer ins = Timer.getInstance();
+		ins.startTiming("BubbleSort.sort");
+		
 		final int SIZE = array.length;
     	int temp;
     	
@@ -13,6 +16,8 @@ class BubbleSort {
     			}
     		}
     	}
+    	
+    	ins.stopTiming("BubbleSort.sort");
     }
 	
 }

@@ -2,6 +2,9 @@
 public class QuickSort {
 
 	public static void sort(int[] array, int low, int high) {
+		Timer ins = Timer.getInstance();
+		ins.startTiming("QuickSort.sort");
+		
 		if(array == null || array.length == 0) {
 			return;
 		}
@@ -44,6 +47,8 @@ public class QuickSort {
 		if(high > i) {
 			sort(array, i, high);
 		}
+
+		ins.stopTiming("QuickSort.sort");
 	}
 
 }

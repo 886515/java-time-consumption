@@ -14,18 +14,12 @@ public class Test {
 		int[] array = populateArray();
 		ins.stopTiming("populateArray()");
 		
-		ins.startTiming("bubbleSort(array)");
 		BubbleSort.sort(array);
-		ins.stopTiming("bubbleSort(array)");
 		
-		ins.startTiming("quickSort(array)");
 		QuickSort.sort(array, 0, array.length - 1);
-		ins.stopTiming("quickSort(array)");
 		
 		ins.stopTiming("main");
-		
 		ins.comment("One last comment before the dump!");
-		
 		ins.dump("my.log");
 	}
 	
